@@ -139,9 +139,30 @@ void print_board(int n, int m, char board[n][m], int flag)
  **/
 int typeToSize(char type)
 {
-    //Implementar
+    int tamanho;
+    printf("Indique o tipo de barco:");
+    scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
+    
+    switch(type)
+    {
+        case 'P' || 'p':
+            tamanho = 5;
+            break;
+        case 'N' || 'n':
+            tamanho = 4;
+            break;
+        case 'C' || 'c':
+            tamanho = 3;
+            break;
+        case 'S' || 's':
+            tamanho = 2;
+            break;
+        default:
+            tamanho = -1;
+            break;
+    }
 
-    return 0;
+    return tamanho;
 }
 
 /**
