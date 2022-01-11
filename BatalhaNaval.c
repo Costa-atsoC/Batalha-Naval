@@ -6,6 +6,8 @@
  **/ 
 
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 #define B 6
 #define N 8
@@ -140,21 +142,18 @@ void print_board(int n, int m, char board[n][m], int flag)
 int typeToSize(char type)
 {
     int tamanho;
-    printf("Indique o tipo de barco:");
-    scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
-    
-    switch(type)
+    switch(toupper(type))
     {
-        case 'P' || 'p':
+        case 'P':
             tamanho = 5;
             break;
-        case 'N' || 'n':
+        case 'N':
             tamanho = 4;
             break;
-        case 'C' || 'c':
+        case 'C':
             tamanho = 3;
             break;
-        case 'S' || 's':
+        case 'S':
             tamanho = 2;
             break;
         default:
@@ -292,7 +291,33 @@ int target(int x, int y, Board *board)
 //int colocaNavio()
 int main(void)
 {
+    Boat player1[6];
+    Boat player2[6];
+    Position lugar[50];
+    char type;
+    int posx, posy
 
+    printf("---------------------------------BATALHA NAVAL---------------------------------\n\n");
+    printf("*Informações importantes:\n");
+    printf("*\t·")
+    
+    for(int i = 0; i < 6; i+=2)
+    {
+        printf("--------------Player 1--------------\n");
+        printf("\tBarco nº%d:", i+1);
+        printf("\t\t·Indique o tipo de barco:");
+        scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
+        typeToSize(type);
+        printf("\t\t·Indique a 1ª posição: ");
+        scanf("(%d, %d)", &posx, &posy);
+        lugar.x = posx;
+        lugar.y = posy;
+        printf("Indique a direção do barco")
+        init_boat(player1[i], type, lugar, dir);
+
+        init_boat(player2[i]);
+    }
+    
     Board brd;
     init_board(N, M, &brd);
     print_board(N, M, brd.board, 1);
