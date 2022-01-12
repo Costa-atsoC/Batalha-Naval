@@ -140,10 +140,10 @@ void print_board(int n, int m, char board[n][m], int flag)
  *  -1 se o tipo de barco for inválido
  *  caso contrário, devolve o tamanho do barco
  **/
-int typeToSize(char type)
+int typeToSize(char type) //Esta função é simples. Ao receber da função main a letra correspondente ao tipo de barco vai fazer uma comparação com as letras já dos barcos existentes. Se a letra que for introduzida for correta (não importa se é minuscula ou maiscula) vai devolver o tamanho da mesma, caso contrario vai devolver -1, indicando que está errado.
 {
     int tamanho;
-    switch (toupper(type))
+    switch (toupper(type))//Aqui usamos um switch para fazer a comparação. O "toupper" faz parte da biblioteca ctype e ser va para passar os as letras minusculas para maiusculas
     {
     case 'P':
         tamanho = 5;
@@ -187,21 +187,21 @@ int typeToSize(char type)
  **/
 void init_boat(Boat *b, char type, Position xy, char dir)
 {
-    b->tSize = typeToSize(type);
-    b->afloat = typeToSize(type);
+    b->tSize = typeToSize(type);//Substituimos, na struct Boat, o tSIze com o tamanho que nos é retomado da função typeToSize.
+    b->afloat = typeToSize(type);//A mesma coisa da de cima mas desta vez para o afloat.
     for(int j = 0 ; j < b->tSize; j++)
     {
-        if (toupper(dir) == 'H')
+        if (toupper(dir) == 'H')//caso o utilizador deseje colocar os barcos na horizontal
         {
             b->coord[j].pos.y = xy.y+j;
             b->coord[j].pos.x = xy.x;
-            b->coord[j].afloat = 1;
+            b->coord[j].afloat = 1;//Na coordenada em questão muda o valor do afloat para 1 indicando que nessa posição encontra se um barco
         }
-        if(toupper(dir) == 'V')
+        if(toupper(dir) == 'V')//caso o utilizador deseje colocar os barcos na vertical
         {
             b->coord[j].pos.x = xy.x+j;
             b->coord[j].pos.y = xy.y;
-            b->coord[j].afloat = 1;
+            b->coord[j].afloat = 1;//Na coordenada em questão muda o valor do afloat para 1 indicando que nessa posição encontra se um barco
         }
     }
 }
