@@ -193,12 +193,14 @@ void init_boat(Boat *b, char type, Position xy, char dir)
     {
         if (toupper(dir) == 'H')
         {
-            b->coord[j].pos.x += j;
+            b->coord[j].pos.y = xy.y+j;
+            b->coord[j].pos.x = xy.x;
             b->coord[j].afloat = 1;
         }
         if(toupper(dir) == 'V')
         {
-            b->coord[j].pos.y += j;
+            b->coord[j].pos.x = xy.x+j;
+            b->coord[j].pos.y = xy.y;
             b->coord[j].afloat = 1;
         }
     }
@@ -222,9 +224,7 @@ void init_boat(Boat *b, char type, Position xy, char dir)
  **/
 int check_free(int n, int m, Boat *boat, char board[n][m])
 {
-    //Implementar
 
-    return -1;
 }
 
 /** 
@@ -247,7 +247,22 @@ int check_free(int n, int m, Boat *boat, char board[n][m])
  **/
 int place_boat(int x1, int y1, int dir, char type, Board *board)
 {
-    //Implementar
+    Boat b;
+    Position pos=(x1, y1);
+    init_boat(&b,type,pos,dir);
+    for (int i=0; i<typeToSize(type); i++)
+        {
+            if (toupper(dir)=='H')
+            {
+                check_free(N,M,&b,board->board);
+                board->board[y1+i][x1]=type;
+            }
+            else if (toupper(dir)=='V')
+            {
+                board->board[y1][x1+i]=type;
+            }
+                
+        }
 
     return 1;
 }
@@ -306,8 +321,8 @@ int target(int x, int y, Board *board)
 int main(void)
 {
     Boat player1[B];
-    Boat player2[B];
-    Position lugar[64];
+    Board brd;
+    Position p;
     char type, dir;
     int posx, posy;
 
@@ -322,20 +337,32 @@ int main(void)
         printf("\t\t·Indique o tipo de barco:");
         scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
         getchar();
-        printf("\t\t·Indique a 1ª posição: ");
-        scanf("%d %d", &posx, &posy);
-        lugar->x = posx;
-        lugar->y = posy;
+        do{
+            printf("\t\t·Indique a posição X: ");
+            scanf("%d", &posx);
+            getchar();
+            if (posx<0 || posx>=N)
+                printf("Erro! insira um posição Valida\n");
+        } while (posx<0 || posx>=N);
+        do{
+            printf("\t\t·Indique a posição Y: ");
+            scanf("%d", &posy);
+            getchar();
+            if (posy < 0 || posy>=M)
+                printf("Erro! insira um posição Valida\n");
+        } while (posy<0 || posy>=M);
+        p.x = posx;
+        p.y = posy;
         getchar();
-        printf("Indique a direção do barco: \n");
+        printf("\t\t·Indique a direção do barco: ");
         scanf(" %c", &dir);
         getchar();
-        init_boat(&player1[i], type, *lugar, dir);
+        init_boat(&player1[i], type, p, dir);
+        check_free(N,M,&player1[i],brd.board);
 
         //init_boat(player2[i]);
     }
 
-    Board brd;
     init_board(N, M, &brd);
     print_board(N, M, brd.board, 1);
 
