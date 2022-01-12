@@ -140,10 +140,10 @@ void print_board(int n, int m, char board[n][m], int flag)
  *  -1 se o tipo de barco for inválido
  *  caso contrário, devolve o tamanho do barco
  **/
-int typeToSize(char type) //Esta função é simples. Ao receber da função main a letra correspondente ao tipo de barco vai fazer uma comparação com as letras já dos barcos existentes. Se a letra que for introduzida for correta (não importa se é minuscula ou maiscula) vai devolver o tamanho da mesma, caso contrario vai devolver -1, indicando que está errado.
+int typeToSize(char type)
 {
     int tamanho;
-    switch (toupper(type))//Aqui usamos um switch para fazer a comparação. O "toupper" faz parte da biblioteca ctype e ser va para passar os as letras minusculas para maiusculas
+    switch (toupper(type))
     {
     case 'P':
         tamanho = 5;
@@ -187,21 +187,21 @@ int typeToSize(char type) //Esta função é simples. Ao receber da função mai
  **/
 void init_boat(Boat *b, char type, Position xy, char dir)
 {
-    b->tSize = typeToSize(type);//Substituimos, na struct Boat, o tSIze com o tamanho que nos é retomado da função typeToSize.
-    b->afloat = typeToSize(type);//A mesma coisa da de cima mas desta vez para o afloat.
+    b->tSize = typeToSize(type);
+    b->afloat = typeToSize(type);
     for(int j = 0 ; j < b->tSize; j++)
     {
-        if (toupper(dir) == 'H')//caso o utilizador deseje colocar os barcos na horizontal
+        if (toupper(dir) == 'H')
         {
             b->coord[j].pos.y = xy.y+j;
             b->coord[j].pos.x = xy.x;
-            b->coord[j].afloat = 1;//Na coordenada em questão muda o valor do afloat para 1 indicando que nessa posição encontra se um barco
+            b->coord[j].afloat = 1;
         }
-        if(toupper(dir) == 'V')//caso o utilizador deseje colocar os barcos na vertical
+        if(toupper(dir) == 'V')
         {
             b->coord[j].pos.x = xy.x+j;
             b->coord[j].pos.y = xy.y;
-            b->coord[j].afloat = 1;//Na coordenada em questão muda o valor do afloat para 1 indicando que nessa posição encontra se um barco
+            b->coord[j].afloat = 1;
         }
     }
 }
@@ -224,7 +224,18 @@ void init_boat(Boat *b, char type, Position xy, char dir)
  **/
 int check_free(int n, int m, Boat *boat, char board[n][m])
 {
+    int x, y;
+    for(int i = 0; i < boat->tSize; i++)//Vamos fazer um loop para Verificar todas as posições do barco que estivermos a trabalhar
+    {
+        x = boat->coord[i].pos.x;
+        y = boat->coord[i].pos.y;
 
+        if(board[x][y] != ' ')// Se por acaso alguma das posições não for vazia quer dizer que existe um barco nessa posição visto que até este ponto não é possivel ter um '*' (afundado)
+        {
+            return 0;//Salta logo fora da função
+        }
+    }
+    return 1;
 }
 
 /** 
@@ -333,33 +344,38 @@ int main(void)
     for (int i = 0; i < B; i++)
     {
         printf("--------------Player 1--------------\n");
-        printf("\tBarco nº%d\n", i + 1);
-        printf("\t\t·Indique o tipo de barco:");
-        scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
-        getchar();
-        do{
-            printf("\t\t·Indique a posição X: ");
-            scanf("%d", &posx);
+        do{//Vai fazer este loop enquanto a função check_free devolver 0 pois quer dizer que já existia um barco em qualquer um dos espaços
+            printf("\tBarco nº%d\n", i + 1);
+            printf("\t\t·Indique o tipo de barco:");
+            scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
             getchar();
-            if (posx<0 || posx>=N)
-                printf("Erro! insira um posição Valida\n");
-        } while (posx<0 || posx>=N);
-        do{
-            printf("\t\t·Indique a posição Y: ");
-            scanf("%d", &posy);
+            do{
+                printf("\t\t·Indique a posição X: ");
+                scanf("%d", &posx);
+                getchar();
+                if (posx<0 || posx>=N)
+                    printf("Erro! insira um posição Valida\n");
+            } while (posx<0 || posx>=N);//loop para validar o numero metido 
+            do{
+                printf("\t\t·Indique a posição Y: ");
+                scanf("%d", &posy);
+                getchar();
+                if (posy < 0 || posy>=M)
+                    printf("Erro! insira um posição Valida\n");
+            } while (posy<0 || posy>=M);//loop para validar o nº metido
+            p.x = posx;
+            p.y = posy;
+            do{
+                printf("\t\t·Indique a direção do barco: ");
+                scanf(" %c", &dir);
+                if(dir != 'h' || dir == 'H' || dir == 'v' || dir == 'V'){
+                    printf("\t\t*Por favor introduza uma letra válida. É lhe relembrado que só pode introduzir 'h' ou 'v'.*\n");
+                }
+            }while(dir != 'h' || dir == 'H' || dir == 'v' || dir == 'V');
             getchar();
-            if (posy < 0 || posy>=M)
-                printf("Erro! insira um posição Valida\n");
-        } while (posy<0 || posy>=M);
-        p.x = posx;
-        p.y = posy;
-        getchar();
-        printf("\t\t·Indique a direção do barco: ");
-        scanf(" %c", &dir);
-        getchar();
-        init_boat(&player1[i], type, p, dir);
-        check_free(N,M,&player1[i],brd.board);
-
+            
+            init_boat(&player1[i], type, p, dir);
+        } while (check_free(N,M,&player1[i],brd.board) != 1);
         //init_boat(player2[i]);
     }
 
@@ -372,4 +388,4 @@ int main(void)
     //place_boat(1,3, 'H', 'P', &brd);
 
     return 0;
-}
+}   
