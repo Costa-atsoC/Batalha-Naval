@@ -248,7 +248,7 @@ int check_free(int n, int m, Boat *boat, char board[n][m])
 int place_boat(int x1, int y1, int dir, char type, Board *board)
 {
     Boat b;
-    Position pos=(x1, y1);
+    Position pos={x1, y1};
     init_boat(&b,type,pos,dir);
     for (int i=0; i<typeToSize(type); i++)
         {
