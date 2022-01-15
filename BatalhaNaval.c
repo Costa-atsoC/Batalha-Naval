@@ -325,7 +325,10 @@ char check_sink(int x, int y, Board *board)//Teremos todos juntos e de mãos dad
  **/
 int target(int x, int y, Board *board)
 {
-    //Implementar
+    for(int i = 0; i < typeToSize(board->boats[i].type); i++)
+    {
+        
+    }
 
     return -3;
 }
