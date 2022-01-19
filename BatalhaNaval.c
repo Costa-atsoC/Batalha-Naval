@@ -529,16 +529,16 @@ int main(void)
     char type, dir;
     int opcao, posx, posy, placecheck = 0, targetcheck = -3, placedboats[4] = {2, 2, 1, 1}; /** S, C, N, P*/
 
-    printf("---------------------------------BATALHA NAVAL---------------------------------\n\n");
+    printf("---------------------------------BATALHA NAVAL--------------------------------\n\n");
 
     do
     {
         printf("+-----------------------------------+\n");
         printf("|Menu inicial:                      |\n");
-        printf("|\t1- Objetivos do jogo.            |\n");
-        printf("|\t2- Informações importantes.      |\n");
-        printf("|\t3- Iniciar o jogo.               |\n");
-        printf("|\t0- Sair.                         |\n");
+        printf("|\t1- Objetivos do jogo.       |\n");
+        printf("|\t2- Informações importantes. |\n");
+        printf("|\t3- Iniciar o jogo.          |\n");
+        printf("|\t0- Sair.                    |\n");
         printf("+-----------------------------------+\n");
 
         printf("Opção: ");
@@ -546,21 +546,32 @@ int main(void)
         switch (opcao)
         {
         case 1:
+            printf("\n*******************************************************************************\n");
             printf("Objetivos do jogo:\n");
-            printf(" O objetivo da Batalha naval é afundar o máximo de barcos ou acertar no máximo de espaços onde existam barcos do inimigo.");
-            printf(" O jogo começa quando um dos dois jogadores seleciona o lugar dos seis barcos existentes: dois Submarinos (S), dois Contratorpedeiros (C), um Porta Aviões (P) e um Navio-tanque (N).");
-            printf(" Depois dos seis barcos serem colocados o outro jogador, dentro de quarenta jogadas, tem de adivinhar a posição dos barcos do outro jogador.");
-            printf(" Se dento do limite de jogadas não conseguir afundar todos os navios passa passa a vez ao proximo jogador onde, num tabuleiro novo, volta a repetir o processo.\n");
+            printf(" O objetivo da Batalha naval é afundar o máximo de barcos ou acertar no máximo \nde espaços onde existam barcos do inimigo.");
+            printf(" O jogo começa quando um dos dois \njogadores seleciona o lugar dos seis barcos existentes: dois Submarinos (S),\n dois Contratorpedeiros (C), um Porta Aviões (P) e um Navio-tanque (N).\n");
+            printf(" Depois dos seis barcos serem colocados o outro jogador, dentro de quarenta\n jogadas, tem de adivinhar a posição dos barcos do outro jogador.");
+            printf(" Se dento \ndo limite de jogadas não conseguir afundar todos os navios, os jogadores\n trocam de posições e, num novo tabuleiro, o jogo repete-se mas com as\n funções dos jogadores trocada.\n");
+            printf("*******************************************************************************\n\n");
             break;
         case 2:
+        printf("\n*******************************************************************************\n");
             printf("Informações importantes:\n");
+            printf("\t·Número de espaços de cada barco:\n");
+            printf("\t\t·Submarino (S) -> 2;\n");
+            printf("\t\t·Contratorpedeiros (C) -> 3;\n");
+            printf("\t\t·Navio-tanque (N) -> 4;\n");
+            printf("\t\t·Porta Aviões (P) -> 5.\n");
             printf("\t·Utilizar apenas os caracteres que lhe forem pedido.\n");
             printf("\t·Este tabuleiro tem %d colunas e %d linhas.\n", M, N);
-            printf("\t·Li.\n");
+            printf("\t·As coordenadas começam em (0,0) e vão até (%d,%d).\n", N-1, M-1);
+            printf("\t·Este jogo foi feito com fullscreen ou 79x26 (no minimo) em mente.\n");
+            printf("\t·Se quiser sair do jogo a qualquer momento prima CRTL+C.\n");
+            printf("*******************************************************************************\n\n");
             break;
         case 3:
             init_board(N, M, &brd);
-            printf("--------------Player 1--------------\n");
+            printf("---------------Player 1--------------\n");
 
             for (int i = 0; i < B; i++)
             {
@@ -568,53 +579,49 @@ int main(void)
                 {
                     if (placecheck == -4)
                     {
-                        printf("Porfavor insira um barco válido");
+                        printf("\t*Por favor insira um barco válido*");
                     }
-                    printf("Faltam colocar: ");
+                    printf("\n+--------------------------------+\n");
+                    printf("|Faltam colocar:                 |\n");
                     if (placedboats[0] > 0)
                     {
-                        printf(" %d Submarinos (S)", placedboats[0]);
+                        printf("|\t·%d Submarinos (S).       |\n", placedboats[0]);
                     }
                     if (placedboats[1] > 0)
                     {
-                        printf(" %d Contratorpedeiros (C)", placedboats[1]);
+                        printf("|\t·%d Contratorpedeiros (C).|\n", placedboats[1]);
                     }
                     if (placedboats[2] > 0)
                     {
-                        printf(" %d Navios Tanque (N)", placedboats[2]);
+                        printf("|\t·%d Navios Tanque (N).    |\n", placedboats[2]);
                     }
                     if (placedboats[3] > 0)
                     {
-                        printf(" %d Porta-Aviões (P)", placedboats[3]);
+                        printf("|\t·%d Porta-Aviões (P).     |\n", placedboats[3]);
                     }
-                    printf(".\n");
+                    printf("+--------------------------------+\n");
                     do
                     {
+                        printf("\t->Barco:");
                         scanf(" %c", &type);
                         getchar();
                         if (placedboats[sizetoplacedboats(typeToSize(type))] == 0)
                         {
-                            printf("Já inseriu todos os barcos deste tipo");
+                            printf("\t*Já inseriu todos os barcos deste tipo*\n");
                         }
-                    } while (placedboats[sizetoplacedboats(typeToSize(type))] == 0);
+                    }while (placedboats[sizetoplacedboats(typeToSize(type))] == 0);
                 }
-
-                /*
-                printf("\tBarco nº%d \n", i + 1);
-                printf("\t\t·Indique o tipo de barco:");
-                scanf("%c", &type); //P tem 5 casas, N tem 4, C tem 3, S tem 2
-                getchar();*/
                 do
                 {
                     if (placecheck == -1)
                     {
-                        printf("\n\t\tUma das posições já se encontra ocupada\n");
+                        printf("\n\t*Uma das posições já se encontra ocupada*\n");
                     }
                     if (placecheck == -2 || placecheck == 0 || placecheck == -1)
                     {
                         if (placecheck == -2)
                         {
-                            printf("\n\t\tUma das coordenadas inseridas é invalida\n");
+                            printf("\n\t*Uma das coordenadas inseridas é invalida*\n");
                         }
                         printf("\t\t·Indique a posição X: ");
                         scanf("%d", &posx);
@@ -676,37 +683,37 @@ int main(void)
                 print_board(N, M, brd.board, 1);
             }
             ordenabarcos(&brd);
+            printf("\n\n\n--------------Player 2--------------\n");
             for (int i = 0; i < 40; i++)
             {
-                printf("--------------Player 2--------------\n");
-                printf("Turno %d", i);
+                printf("Turno %d\n", i+1);
                 print_board(N, M, brd.board, 0);
                 do
                 {
                     if (targetcheck == 0)
                     {
-                        printf("\t\tO jogador já atacou essa posição\n");
+                        printf("\t\t*O jogador já atacou essa posição*\n");
                     }
                     if (targetcheck == -2)
                     {
-                        printf("A coordenada inserido é invalida");
+                        printf("\t\t*A coordenada inserido é invalida*\n");
                     }
-                    printf("\t\t·Indique a posição X: ");
+                    printf("\t·Indique a posição X: ");
                     scanf("%d", &posx);
                     getchar();
-                    printf("\t\t·Indique a posição Y: ");
+                    printf("\t·Indique a posição Y: ");
                     scanf("%d", &posy);
                     getchar();
                     p.x = posx;
                     p.y = posy;
                     targetcheck = target(posx, posy, &brd);
                 } while (targetcheck < 1);
-
-                /**Exemplo de uso da print_board e da place_boat**/
-                /**Precisa de as implementar primeiro**/
-                // print_board(N, M, brd.board, 0);
-                // place_boat(1,3, 'H', 'P', &brd);
             }
+        case 0:
+            break;
+        default:
+            printf("\n*Introduza um número válido*\n\n");
+            break;
         }
     } while (opcao != 0);
 
