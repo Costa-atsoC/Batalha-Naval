@@ -596,8 +596,8 @@ int main(void)
         scanf("%d", &opcao);
         Board brd, cleanboard; /**board limpo para resetar apos cada jogo*/
         Position p;
-        char type, dir;
-        int posx, posy, placecheck, targetcheck, playerswap, jogador[2] = {1, 2}, cheating, victory; /** S, C, N, P*/
+        char type, dir, jogador[2] = {1, 2}, player1[60], player2[60];
+        int posx, posy, placecheck, targetcheck, playerswap, cheating, victory; /** S, C, N, P*/
         switch (opcao)
         {
             /// Informação de objetivos de jogo
@@ -619,15 +619,39 @@ int main(void)
             printf("\t\t·Contratorpedeiros (C) -> 3;\n");
             printf("\t\t·Navio-tanque (N) -> 4;\n");
             printf("\t\t·Porta Aviões (P) -> 5.\n");
+            printf("\t·Terminologia:\n");
+            printf("\t\t·F -> O jogador não acertou em nenhum barco;\n");
+            printf("\t\t·A -> O jogador afundou um barco inteiro ;\n");
+            printf("\t\t·* -> O jogador acertou em alguma parte de um barco.\n");
+            printf("\t·Direções disponiveis:\n");
+            printf("\t\t·H -> horizontal;\n");
+            printf("\t\t·V -> Vertical.\n");
             printf("\t·Utilizar apenas os caracteres que lhe forem pedido.\n");
             printf("\t·Este tabuleiro tem %d colunas e %d linhas.\n", M, N);
             printf("\t·As coordenadas começam em (0,0) e vão até (%d,%d).\n", N - 1, M - 1);
             printf("\t·Este jogo foi feito com fullscreen ou 79x26 (no minimo) em mente.\n");
             printf("\t·Se quiser sair do jogo a qualquer momento prima CRTL+C.\n");
+            printf("\t·Quando estiver a atacar, se introduzir as coordendas (-69,42) irá ser \n\t    lhe mostrado o tabuleiro com todas as posiçõs mas o jogador perde.\n");
+            printf("\t·A coordenada x é vertical e a coordenada y é horizontal\n");
             printf("*******************************************************************************\n\n");
             break;
             /// Iniciar jogo
         case 3:
+            getchar();
+            printf("Nome do player1: ");
+            fgets(player1, 60, stdin);
+            char *pos = strchr(player1, '\n');
+            if (pos != NULL)
+                *pos = '\0';
+            else
+                player1[59] = '\n';
+            printf("Nome do player2: ");
+            fgets(player2, 60, stdin);
+            char *cao = strchr(player2, '\n');
+            if (cao != NULL)
+                *cao = '\0';
+            else
+                player2[59] = '\n';
             do
             {
                 brd = cleanboard;
@@ -637,7 +661,7 @@ int main(void)
                 cheating = 0;
                 victory = 0;
                 init_board(N, M, &brd);
-                printf("---------------Jogador %d--------------\n", jogador[0]);
+                printf("\n---------------Jogador %s--------------\n", player1);
 
                 for (int i = 0; i < B; i++)
                 {
@@ -748,7 +772,7 @@ int main(void)
                     } while (placecheck != 0);
                     print_board(N, M, brd.board, 1);
                 }
-                printf("\n\n\n--------------Jogador %d--------------\n", jogador[1]);
+                printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n--------------Jogador %s--------------\n", player2);
                 for (int i = 0; i < 40; i++)
                 {
                     printf("Turno %d\n", i + 1);
@@ -779,52 +803,59 @@ int main(void)
                         targetcheck = target(p.x, p.y, &brd);
                         if (targetcheck > 1)
                         {
-                            printf("\nAfundou um: ");
+                            printf("\n\t##################################\n");
+                            printf("\t#Afundou:                        #\n");
                             switch (targetcheck)
                             {
                             case 2:
-                                printf(" Um Submarino (S)");
+                                printf("\t#\t·Um Submarino (S)!       #\n");
                                 break;
                             case 3:
-                                printf(" Um Contratorpedeiro (C)");
+                                printf("\t#\t·Um Contratorpedeiro (C)!#\n");
                                 break;
                             case 4:
-                                printf(" Um Navio-Tanque");
+                                printf("\t#\t·Um Navio-Tanque(N)!     #\n");
                                 break;
                             case 5:
-                                printf(" Um Porta Aviões (P)");
+                                printf("\t#\t·Um Porta Aviões (P)!    #\n");
                                 break;
                             default:
                                 break;
                             }
-                            printf(" .\n");
+                            printf("\t##################################\n\n");
                         }
                     } while (targetcheck == 0 || targetcheck == -2);
+                    /*if(cheating == 1)
+                    {
+                        printf("\n--------------O Jogador %d Ganhou--------------\n\n\n", jogador[0]);
+                    }*/
                     if (cheating == 0)
                     {
                         if (brd.numBoatsAfloat == 0)
                         {
-                            printf("\n--------------O Jogador %d Ganhou--------------\n\n\n", jogador[1]);
+                            printf("\n--------------O Jogador %s Ganhou--------------\n\n\n", player2);
                             victory = 1;
                             break;
                         }
                     }
                 }
-                if (cheating == 1)
+                if (brd.numBoatsAfloat > 0 && cheating == 1)
                 {
-                    printf("\n--------------O Jogador %d Ganhou--------------\n\n\n", jogador[0]);
+                    printf("\n~~~~~~~~~~~~~~O Jogador %s Ganhou~~~~~~~~~~~~~~\n\n\n", player1);
+                    victory = 1;
                 }
-                if (brd.numBoatsAfloat > 0)
+                if (brd.numBoatsAfloat > 0 && victory == 0)
                 {
-                    printf("\n--------------O Jogador %d Ganhou--------------", jogador[0]);
-                    printf("\n\n--------------As Posições Serão Trocadas--------------\n\n");
-                    playerswap = jogador[0];
-                    jogador[0] = jogador[1];
-                    jogador[1] = playerswap;
+                    // printf("\n--------------O Jogador %d Ganhou--------------", jogador[0]);
+                    printf("\n\n~~~~~~~~~~~~~~As Posições Serão Trocadas~~~~~~~~~~~~~~\n\n");
+                    playerswap = player1;
+                    player1 = player2;
+                    player2 = playerswap;
                 }
             } while (victory != 1);
             break;
         case 0:
+            printf("\t\\Obrigado pelo seu tempo e esperemos que tenha gostado./\n");
             break;
         default:
             printf("\n*Introduza um número válido*\n\n");
@@ -832,6 +863,5 @@ int main(void)
         }
     } while (opcao != 0);
     /// Se a opção for 0 para o jogo
-
     return 0;
 }
